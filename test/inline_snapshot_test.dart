@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';
 
 Future<void> testReplacingFile(String actual, String expected,
-    {required bool updateExpect, String? containStdout}) async {
+    {required bool updateExpect}) async {
   const importContent =
       "import 'package:inline_snapshot/inline_snapshot.dart';\n"
       "import 'package:test/test.dart';";
@@ -20,14 +20,10 @@ Future<void> testReplacingFile(String actual, String expected,
   try {
     await testFile.create();
     await testFile.writeAsString(actual);
-    final processResult = await Process.run("dart", ["test", testFile.path],
+    await Process.run("dart", ["test", testFile.path],
         environment: {"UPDATE_EXPECT": updateExpect.toString()});
     final resultContent = await testFile.readAsString();
     expect(resultContent, expected);
-
-    if (containStdout != null) {
-      expect(processResult.stdout, contains(containStdout));
-    }
   } finally {
     if (await testFile.exists()) {
       await testFile.delete();
@@ -245,8 +241,6 @@ void main() {
 }
         ''',
         updateExpect: false,
-        containStdout: '  Expected: <null>\n'
-            '    Actual: \'actual string\'\n',
       );
     });
 
