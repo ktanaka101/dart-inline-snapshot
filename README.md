@@ -11,12 +11,18 @@ https://user-images.githubusercontent.com/10344925/208234218-a1629767-4dc6-4455-
 
 ## What is convenient?
 
-Expected results are not output to an external file, but rather written to the same location as the input. This makes it easy to verify the input and expected result together. Since the test can be automatically updated, the only cost of modifying the test is checking the differences detected.
+Expected results are not written to an external file, but rather stored in the same location as the input. This makes it easy to verify the input and expected result together. Since the test can be automatically updated, the only cost of modifying the test is reviewing the differences detected.
 
-This type of testing is ideal for cases where expected results are small and likely to change, such as:
+Here are some examples of cases where inline snapshot testing might be useful:
 
 - Testing parser results (e.g., ASTs) in programming languages
-- Any other test that can be serialized into a string
+- Testing the output of a code formatter
+- Testing the output of a code minifier
+- Testing the output of a templating engine
+- Testing the output of a serialization/deserialization process
+- Testing the output of a data transformation or mapping function
+
+In each of these cases, the expected results are likely to be small and subject to change, and inline snapshot testing allows you to easily update the expected results and verify the input and output together in the same location.
 
 ## Getting started
 
