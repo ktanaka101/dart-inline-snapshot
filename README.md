@@ -2,6 +2,8 @@
 
 Support inline snapshot testing for Dart.
 
+https://user-images.githubusercontent.com/10344925/208233943-2b498621-bafa-46af-92ae-20a9002e2cef.mov
+
 ## Features
 
 - Performs an inline snapshot testing
