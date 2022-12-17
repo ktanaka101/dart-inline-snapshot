@@ -13,10 +13,40 @@ import 'package:stack_trace/stack_trace.dart';
 
 export 'src/inline_snapshot_base.dart';
 
+class Collector {
+  List<Patch> patches = [];
+
+  void add(Patch patch) {
+    patches.add(patch);
+  }
+
+  Future<void> apply() async {
+    for (var patch in patches) {
+      var content = await File.fromUri(patch.position.uri).readAsString();
+      var lineInfo = LineInfo.fromContent(content);
+      await runInteractiveCodemod(
+        [patch.position.uri.path],
+        Replacer(patch.actual, patch.position, lineInfo),
+        args: ['--yes-to-all'],
+      );
+    }
+    patches.clear();
+  }
+}
+
+class Patch {
+  String actual;
+  Frame position;
+
+  Patch(this.actual, this.position);
+}
+
 class Expect {
+  static final Collector _collector = Collector();
+
   late final Frame _position;
-  final String expected;
-  Expect(this.expected) {
+  final String? expected;
+  Expect([this.expected]) {
     _position = Trace.current(1).frames[0];
   }
 
@@ -25,32 +55,59 @@ class Expect {
       return;
     }
 
-    var fileUri = _position.uri;
-    var content = await File.fromUri(fileUri).readAsString();
-    var lineInfo = LineInfo.fromContent(content);
-    await runInteractiveCodemod([fileUri.path], Replacer(_position, lineInfo));
+    _collector.add(Patch(actual, _position));
+  }
+
+  static Future<void> apply() async {
+    await _collector.apply();
   }
 }
 
 class Replacer extends RecursiveAstVisitor<void> with AstVisitingSuggestor {
+  final String _actual;
   final Frame _callingPosition;
   final LineInfo _lineInfo;
-  Replacer(this._callingPosition, this._lineInfo);
+  Replacer(this._actual, this._callingPosition, this._lineInfo);
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
     var nodeLocation = _lineInfo.getLocation(node.offset);
     if (nodeLocation.lineNumber != _callingPosition.line) {
-      print("no line");
       super.visitMethodInvocation(node);
       return;
     }
     if (nodeLocation.columnNumber != _callingPosition.column!) {
-      print("no column");
       super.visitMethodInvocation(node);
       return;
     }
 
+    var replaceString = formatReplaceString(_actual);
+    if (hasArguments(node)) {
+      var argOffset = node.argumentList.offset + 1;
+      yieldPatch(replaceString, argOffset, argOffset);
+    } else {
+      var target = node.argumentList.arguments.first;
+      yieldPatch(replaceString, target.offset, target.end);
+    }
+
     super.visitMethodInvocation(node);
+  }
+
+  String formatReplaceString(String actual) {
+    if (actual.contains('\n')) {
+      return "'''$_actual'''";
+    } else {
+      return "\"$_actual\"";
+    }
+  }
+
+  bool hasArguments(MethodInvocation node) {
+    try {
+      // throw Exception If arugment is empty.
+      node.argumentList;
+      return true;
+    } on Exception {
+      return false;
+    }
   }
 }
