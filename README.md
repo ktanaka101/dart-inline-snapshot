@@ -18,7 +18,6 @@ Ideal for tests where expected results are small and likely to change.
 For example, the following cases
 
 - Testing HTTP responses
-- Testing your SQL
 - Testing parser results (e.g., ASTs) in programming languages
 - Any other test that can be serialized into a string can be tested!
 
