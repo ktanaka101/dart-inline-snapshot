@@ -18,19 +18,19 @@ class Expect {
   }
 
   Future<void> eq(String actual) async {
-    final expected = trimmedExpected();
+    final expected = _trimmedExpected();
     if (expected == actual) {
       return;
     }
 
-    if (shouldUpdate()) {
+    if (_shouldUpdate()) {
       _collector.add(Patch(actual, _position));
     } else {
       expect(actual, expected);
     }
   }
 
-  String? trimmedExpected() {
+  String? _trimmedExpected() {
     final expected = _expected;
     if (expected == null) {
       return null;
@@ -45,9 +45,9 @@ class Expect {
     }
   }
 
-  static const List<String> envTruthy = ["1", "true"];
-  static bool shouldUpdate() {
-    return envTruthy.contains(Platform.environment["UPDATE_EXPECT"]);
+  static const List<String> _envTruthy = ["1", "true"];
+  static bool _shouldUpdate() {
+    return _envTruthy.contains(Platform.environment["UPDATE_EXPECT"]);
   }
 
   static Future<void> apply() async {
