@@ -32,7 +32,7 @@ Add the following dev dependency to your `pubspec.yaml` file:
 
 ```yml
 dev_dependencies:
-  inline_snapshot: ^1.0.1
+  inline_snapshot: ^1.0.2
 ```
 
 ## Usage

@@ -2,7 +2,7 @@ name: inline_snapshot
 description: |
   Inline snapshot testing for Dart.
   Allows updating expected results based on actual results.
-version: 1.0.1
+version: 1.0.2
 repository: https://github.com/ktanaka101/dart-inline-snapshot
 
 environment:
