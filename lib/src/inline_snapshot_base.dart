@@ -12,11 +12,21 @@ class Expect {
   static final Collector _collector = Collector();
 
   late final Frame _position;
+
+  /// The expected result.
   final String? _expected;
+
+  /// Constructs an `Expect` object.
   Expect([this._expected]) {
     _position = Trace.current(1).frames[0];
   }
 
+  /// Compares the [actual] result to the [_expected] result.
+  ///
+  /// If [actual] matches the [_expected] result, the test is considered a success.
+  /// If they do not match, the expected result is marked for replacement if `UPDATE_EXPECT` is set to `true` or `1`.
+  /// If it is not specified, the Expect object behaves similarly to `expect(actual, expected)`,
+  /// with leading newlines in the expected result being removed before comparison.
   Future<void> eq(String actual) async {
     final expected = _trimmedExpected();
     if (expected == actual) {
@@ -30,6 +40,7 @@ class Expect {
     }
   }
 
+  /// Trims from the expected result.
   String? _trimmedExpected() {
     final expected = _expected;
     if (expected == null) {
@@ -50,6 +61,7 @@ class Expect {
     return _envTruthy.contains(Platform.environment["UPDATE_EXPECT"]);
   }
 
+  /// Replaces the expected results marked for replacement.
   static Future<void> apply() async {
     await _collector.apply();
   }
