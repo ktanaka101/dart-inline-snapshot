@@ -1,6 +1,6 @@
 # Inline snapshot
 
-[![Pub Package](https://img.shields.io/pub/v/inline_snapshot.svg)](https://pub.dev/packages/inline_snapshot) [![likes](https://img.shields.io/pub/likes/inline_snapshot?logo=dart)](https://pub.dev/packages/inline_snapshot/score) [![popularity](https://img.shields.io/pub/popularity/inline_snapshot?logo=dart)](https://pub.dev/packages/inline_snapshot/score) [![pub points](https://img.shields.io/pub/points/inline_snapshot?logo=dart)](https://pub.dev/packages/inline_snapshot/score)
+[![test](https://github.com/ktanaka101/dart-inline-snapshot/actions/workflows/test.yaml/badge.svg)](https://github.com/ktanaka101/dart-inline-snapshot/actions/workflows/test.yaml) [![Pub Package](https://img.shields.io/pub/v/inline_snapshot.svg)](https://pub.dev/packages/inline_snapshot) [![likes](https://img.shields.io/pub/likes/inline_snapshot?logo=dart)](https://pub.dev/packages/inline_snapshot/score) [![popularity](https://img.shields.io/pub/popularity/inline_snapshot?logo=dart)](https://pub.dev/packages/inline_snapshot/score) [![pub points](https://img.shields.io/pub/points/inline_snapshot?logo=dart)](https://pub.dev/packages/inline_snapshot/score)
 
 A library that supports inline snapshot testing for Dart, inspired by [expect-test](https://github.com/rust-analyzer/expect-test), [rspec-inline-snapshot](https://github.com/Hummingbird-RegTech/rspec-inline-snapshot), [Jest](https://jestjs.io/), and others!
 
