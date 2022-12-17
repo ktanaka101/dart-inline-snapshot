@@ -44,14 +44,18 @@ void main() {
   group('A group of tests', () {
     test('First Test', () {
       var e = Expect();
-      //             ^replace "actual string" when run `UPDATE_EXPECT dart test`
+      //             ^replace "actual string" when run `UPDATE_EXPECT=true dart test`
       e.eq("actual string");
     });
   });
 }
 ```
 
-↓
+In the above example, Expect is empty.
+You can update the Expect result in the source code by executing the following command.
+`UPDATE_EXPECT=true dart test`.
+
+When executed, it will update the expected result in the source code as shown in the example below.
 
 ```dart
 import 'package:test/test.dart';
@@ -71,6 +75,21 @@ void main() {
   });
 }
 ```
+
+`UPDATE_EXPECT` can be `1` or `true`.
+
+If `UPDATE_EXPECT=true` is not specified, it behaves as `expect(actual, expected);`.
+The following has the same meaning.
+
+- `Expect("expected").eq("actual");`
+- `expect("actual", "expected");`
+
+## How it works
+
+When you call `Expect("expect string"), it stores the expected result and the location of the caller.
+When `Expect#eq(actual: String)`is called, it compares the`actual`with the expected result.
+If they match, it is treated as success and nothing is done, but if they do not match, it is kept as a replacement target.
+Then, when`Expect.apply();`is executed, it replaces each`actual` with the expected result to be replaced.
 
 ## Contributors
 
