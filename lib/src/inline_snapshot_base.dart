@@ -8,6 +8,37 @@ import 'package:codemod/codemod.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:test/expect.dart';
 
+class Expect {
+  static final Collector _collector = Collector();
+
+  late final Frame _position;
+  final String? expected;
+  Expect([this.expected]) {
+    _position = Trace.current(1).frames[0];
+  }
+
+  Future<void> eq(String actual) async {
+    if (expected == actual) {
+      return;
+    }
+
+    if (shouldUpdate()) {
+      _collector.add(Patch(actual, _position));
+    } else {
+      expect(actual, expected);
+    }
+  }
+
+  static const List<String> envTruthy = ["1", "true"];
+  static bool shouldUpdate() {
+    return envTruthy.contains(Platform.environment["UPDATE_EXPECT"]);
+  }
+
+  static Future<void> apply() async {
+    await _collector.apply();
+  }
+}
+
 class PositionWithOffset {
   final Frame _position;
   final int _offset;
@@ -52,37 +83,6 @@ class Patch {
   Frame position;
 
   Patch(this.actual, this.position);
-}
-
-class Expect {
-  static final Collector _collector = Collector();
-
-  late final Frame _position;
-  final String? expected;
-  Expect([this.expected]) {
-    _position = Trace.current(1).frames[0];
-  }
-
-  Future<void> eq(String actual) async {
-    if (expected == actual) {
-      return;
-    }
-
-    if (shouldUpdate()) {
-      _collector.add(Patch(actual, _position));
-    } else {
-      expect(actual, expected);
-    }
-  }
-
-  static const List<String> envTruthy = ["1", "true"];
-  static bool shouldUpdate() {
-    return envTruthy.contains(Platform.environment["UPDATE_EXPECT"]);
-  }
-
-  static Future<void> apply() async {
-    await _collector.apply();
-  }
 }
 
 class Replacer extends RecursiveAstVisitor<void> with AstVisitingSuggestor {
