@@ -1,5 +1,5 @@
 name: inline_snapshot
-description: Inline snapshot for Dart.
+description: Inline snapshot testing for Dart.
 version: 1.0.0
 repository: https://github.com/ktanaka101/dart-inline-snapshot
 

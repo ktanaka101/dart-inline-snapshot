@@ -1,39 +1,82 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Inline snapshot
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Support inline snapshot testing for Dart.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Performs an inline snapshot testing
+- Update expected results based on actual
+
+## What is convenient?
+
+Expected results are not output to an external file.
+It is written to the same location as the input.
+This makes it easy to verify the input and the expected result.
+Since the test can be automatically updated, the only cost of modifying the test is to check the differences detected.
+
+Ideal for tests where expected results are small and likely to change.
+For example, the following cases
+
+- Testing HTTP responses
+- Testing your SQL
+- Testing parser results (e.g., ASTs) in programming languages
+- Any other test that can be serialized into a string can be tested!
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Add into your `pubspec.yaml` dependencies: section.
+
+```yml
+dependencies:
+  inline_snapshot: ^1.0.0
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
 ```dart
-const like = 'sample';
+import 'package:test/test.dart';
+import 'package:inline_snapshot/inline_snapshot.dart';
+
+void main() {
+  tearDownAll(() async {
+    await Expect.apply();
+  });
+
+  group('A group of tests', () {
+    test('First Test', () {
+      var e = Expect();
+      //             ^replace "actual string" when run `UPDATE_EXPECT dart test`
+      e.eq("actual string");
+    });
+  });
+}
 ```
 
-## Additional information
+↓
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+```dart
+import 'package:test/test.dart';
+import 'package:inline_snapshot/inline_snapshot.dart';
+
+void main() {
+  tearDownAll(() async {
+    await Expect.apply();
+  });
+
+  group('A group of tests', () {
+    test('First Test', () {
+      var e = Expect("actual string");
+      //             ^replaced "actual string"!!
+      e.eq("actual string");
+    });
+  });
+}
+```
+
+## Contributors
+
+- [ktanaka101](https://github.com/ktanaka101) - creator, maintainer
+
+## License
+
+MIT

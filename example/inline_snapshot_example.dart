@@ -1,5 +1,5 @@
-import 'package:inline_snapshot/inline_snapshot.dart';
 import 'package:test/test.dart';
+import 'package:inline_snapshot/inline_snapshot.dart';
 
 void main() {
   tearDownAll(() async {
