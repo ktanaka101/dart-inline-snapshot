@@ -77,8 +77,12 @@ class Expect {
     _collector.add(Patch(actual, _position));
   }
 
+  static const List<String> envTruthy = ["1", "true"];
+
   static Future<void> apply() async {
-    await _collector.apply();
+    if (envTruthy.contains(Platform.environment["UPDATE_EXPECT"])) {
+      await _collector.apply();
+    }
   }
 }
 
