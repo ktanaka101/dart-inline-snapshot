@@ -80,11 +80,8 @@ void main() {
 `UPDATE_EXPECT` can be `1` or `true`.
 
 If `UPDATE_EXPECT=true` is not specified,<br>
-it behaves as `expect(actual, expected);`.<br>
-The following has the same meaning.
-
-- `Expect("expected").eq("actual");`
-- `expect("actual", "expected");`
+it behaves roughly like `expect(actual, expected);`.<br>
+Note that leading newlines in the expected result are removed and then compared.<br>
 
 ## How it works
 
