@@ -1,6 +1,3 @@
-/// Support for doing something awesome.
-///
-/// More dartdocs go here.
 library inline_snapshot;
 
 import 'dart:convert';
@@ -11,6 +8,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/source/line_info.dart';
 import 'package:codemod/codemod.dart';
 import 'package:stack_trace/stack_trace.dart';
+import 'package:test/expect.dart';
 
 export 'src/inline_snapshot_base.dart';
 
@@ -74,15 +72,20 @@ class Expect {
       return;
     }
 
-    _collector.add(Patch(actual, _position));
+    if (shouldUpdate()) {
+      _collector.add(Patch(actual, _position));
+    } else {
+      expect(actual, expected);
+    }
   }
 
   static const List<String> envTruthy = ["1", "true"];
+  static bool shouldUpdate() {
+    return envTruthy.contains(Platform.environment["UPDATE_EXPECT"]);
+  }
 
   static Future<void> apply() async {
-    if (envTruthy.contains(Platform.environment["UPDATE_EXPECT"])) {
-      await _collector.apply();
-    }
+    await _collector.apply();
   }
 }
 
