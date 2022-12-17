@@ -80,7 +80,8 @@ void main() {
 
 `UPDATE_EXPECT` can be `1` or `true`.
 
-If `UPDATE_EXPECT=true` is not specified, it behaves as `expect(actual, expected);`.
+If `UPDATE_EXPECT=true` is not specified,<br>
+it behaves as `expect(actual, expected);`.<br>
 The following has the same meaning.
 
 - `Expect("expected").eq("actual");`
@@ -88,10 +89,10 @@ The following has the same meaning.
 
 ## How it works
 
-When you call `Expect("expect string"), it stores the expected result and the location of the caller.
-When `Expect#eq(actual: String)`is called, it compares the`actual`with the expected result.
+When you call `Expect("expect string")`, it stores the expected result and the location of the caller.
+When `Expect#eq(actual: String)` is called, it compares the `actual` with the expected result.
 If they match, it is treated as success and nothing is done, but if they do not match, it is kept as a replacement target.
-Then, when`Expect.apply();`is executed, it replaces each`actual` with the expected result to be replaced.
+Then, when `Expect.apply();` is executed, it replaces each `actual` with the expected result to be replaced.
 
 ## Contributors
 
