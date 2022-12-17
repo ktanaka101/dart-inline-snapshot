@@ -26,10 +26,10 @@ In each of these cases, the expected results are likely to be small and subject 
 
 ## Getting started
 
-Add the following dependency to your `pubspec.yaml` file:
+Add the following dev dependency to your `pubspec.yaml` file:
 
 ```yml
-dependencies:
+dev_dependencies:
   inline_snapshot: ^1.0.0
 ```
 
