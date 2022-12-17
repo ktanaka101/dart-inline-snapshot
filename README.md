@@ -1,5 +1,7 @@
 # Inline snapshot
 
+[![Pub Package](https://img.shields.io/pub/v/inline_snapshot.svg)](https://pub.dev/packages/inline_snapshot) [![likes](https://img.shields.io/pub/likes/inline_snapshot?logo=dart)](https://pub.dev/packages/inline_snapshot/score) [![popularity](https://img.shields.io/pub/popularity/inline_snapshot?logo=dart)](https://pub.dev/packages/inline_snapshot/score) [![pub points](https://img.shields.io/pub/points/inline_snapshot?logo=dart)](https://pub.dev/packages/inline_snapshot/score)
+
 A library that supports inline snapshot testing for Dart, inspired by [expect-test](https://github.com/rust-analyzer/expect-test), [rspec-inline-snapshot](https://github.com/Hummingbird-RegTech/rspec-inline-snapshot), [Jest](https://jestjs.io/), and others!
 
 https://user-images.githubusercontent.com/10344925/208234218-a1629767-4dc6-4455-9407-c99ea86f2265.mov
