@@ -12,12 +12,13 @@ class Expect {
   static final Collector _collector = Collector();
 
   late final Frame _position;
-  final String? expected;
-  Expect([this.expected]) {
+  final String? _expected;
+  Expect([this._expected]) {
     _position = Trace.current(1).frames[0];
   }
 
   Future<void> eq(String actual) async {
+    final expected = trimmedExpected();
     if (expected == actual) {
       return;
     }
@@ -26,6 +27,21 @@ class Expect {
       _collector.add(Patch(actual, _position));
     } else {
       expect(actual, expected);
+    }
+  }
+
+  String? trimmedExpected() {
+    final expected = _expected;
+    if (expected == null) {
+      return null;
+    }
+    if (expected.contains("\n")) {
+      return expected;
+    }
+    if (expected.startsWith('\n')) {
+      return expected.substring(1);
+    } else {
+      return expected;
     }
   }
 
@@ -72,7 +88,14 @@ class Collector {
         args: ['--yes-to-all'],
       );
       final ls = LineSplitter();
-      offset += ls.convert(patch.actual).length - 1;
+      final len = ls.convert(patch.actual).length;
+      // If len equal 1, single line string.
+      // If len greater than equal 2, multi line string.
+      if (len > 1) {
+        // count new line in multi line string.(len - 1)
+        // In addition, one line break is added at the beginning.(+1)
+        offset += len;
+      }
     }
     patches.clear();
   }
@@ -117,7 +140,8 @@ class Replacer extends RecursiveAstVisitor<void> with AstVisitingSuggestor {
 
   String formatReplaceString(String actual) {
     if (actual.contains('\n')) {
-      return "'''$_actual'''";
+      return """'''
+$_actual'''""";
     } else {
       return "\"$_actual\"";
     }

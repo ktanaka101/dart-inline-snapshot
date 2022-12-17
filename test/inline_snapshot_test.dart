@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:inline_snapshot/inline_snapshot.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';
@@ -191,18 +192,21 @@ void main() {
     await Expect.apply();
   });
   test('testing', () {
-    final e = Expect('''actual 
+    final e = Expect('''
+actual 
 string A''');
     e.eq("actual \\nstring A");
   });
   test("testing", () {
-    final e = Expect('''actual 
+    final e = Expect('''
+actual 
 
 string B''');
     e.eq("actual \\n\\nstring B");
   });
   test("testing", () {
-    final e = Expect('''actual 
+    final e = Expect('''
+actual 
 
 
 string C''');
@@ -244,6 +248,21 @@ void main() {
         containStdout: '  Expected: <null>\n'
             '    Actual: \'actual string\'\n',
       );
+    });
+
+    test(
+        'During comparison, leading newlines in the expected result are removed.',
+        () async {
+      final e = Expect('''
+expected string''');
+      await e.eq('expected string');
+    });
+
+    test('If no match is found, the test fails.', () async {
+      final e = Expect('expected string');
+      await expectLater(() async {
+        await e.eq('no match string');
+      }, throwsA(isA<TestFailure>()));
     });
   });
 }
