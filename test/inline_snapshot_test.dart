@@ -9,7 +9,7 @@ void main() {
   group('A group of tests', () {
     test('First Test', () {
       var e = Expect();
-      e.eq("actual string 1");
+      e.eq("actual \r\n\r\nstring 1");
     });
   });
 
@@ -23,7 +23,7 @@ void main() {
       group('A group of tests', () {
         test('test', () {
           var e = Expect();
-          e.eq("actual \nstring 3");
+          e.eq("actual string 3");
         });
       });
     });

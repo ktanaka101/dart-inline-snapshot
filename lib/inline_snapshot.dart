@@ -3,6 +3,7 @@
 /// More dartdocs go here.
 library inline_snapshot;
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:analyzer/dart/ast/ast.dart';
@@ -13,6 +14,20 @@ import 'package:stack_trace/stack_trace.dart';
 
 export 'src/inline_snapshot_base.dart';
 
+class PositionWithOffset {
+  final Frame _position;
+  final int _offset;
+  PositionWithOffset(this._position, this._offset);
+
+  int line() {
+    return _position.line! + _offset;
+  }
+
+  int column() {
+    return _position.column!;
+  }
+}
+
 class Collector {
   List<Patch> patches = [];
 
@@ -21,14 +36,18 @@ class Collector {
   }
 
   Future<void> apply() async {
+    var offset = 0;
     for (var patch in patches) {
-      var content = await File.fromUri(patch.position.uri).readAsString();
-      var lineInfo = LineInfo.fromContent(content);
+      final content = await File.fromUri(patch.position.uri).readAsString();
+      final lineInfo = LineInfo.fromContent(content);
+      final position = PositionWithOffset(patch.position, offset);
       await runInteractiveCodemod(
         [patch.position.uri.path],
-        Replacer(patch.actual, patch.position, lineInfo),
+        Replacer(patch.actual, position, lineInfo),
         args: ['--yes-to-all'],
       );
+      final ls = LineSplitter();
+      offset += ls.convert(patch.actual).length - 1;
     }
     patches.clear();
   }
@@ -65,18 +84,18 @@ class Expect {
 
 class Replacer extends RecursiveAstVisitor<void> with AstVisitingSuggestor {
   final String _actual;
-  final Frame _callingPosition;
+  final PositionWithOffset _callingPosition;
   final LineInfo _lineInfo;
   Replacer(this._actual, this._callingPosition, this._lineInfo);
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
     var nodeLocation = _lineInfo.getLocation(node.offset);
-    if (nodeLocation.lineNumber != _callingPosition.line) {
+    if (nodeLocation.lineNumber != _callingPosition.line()) {
       super.visitMethodInvocation(node);
       return;
     }
-    if (nodeLocation.columnNumber != _callingPosition.column!) {
+    if (nodeLocation.columnNumber != _callingPosition.column()) {
       super.visitMethodInvocation(node);
       return;
     }
