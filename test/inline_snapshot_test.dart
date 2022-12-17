@@ -36,7 +36,7 @@ Future<void> testReplacingFile(String actual, String expected,
 
 void main() {
   group('UPDATE_EXPECT=true', () {
-    test('Replace expected with actual', () async {
+    test('Replace expected with actual that no arg', () async {
       await testReplacingFile(
         '''
 void main() {
@@ -45,6 +45,34 @@ void main() {
   });
   test("testing", () {
     final e = Expect();
+    e.eq("actual string");
+  });
+}
+        ''',
+        '''
+void main() {
+  tearDownAll(() async {
+    await Expect.apply();
+  });
+  test("testing", () {
+    final e = Expect("actual string");
+    e.eq("actual string");
+  });
+}
+        ''',
+        updateExpect: true,
+      );
+    });
+
+    test('Replace expected with actual that have an arg', () async {
+      await testReplacingFile(
+        '''
+void main() {
+  tearDownAll(() async {
+    await Expect.apply();
+  });
+  test("testing", () {
+    final e = Expect("failure");
     e.eq("actual string");
   });
 }

@@ -105,11 +105,11 @@ class Replacer extends RecursiveAstVisitor<void> with AstVisitingSuggestor {
 
     var replaceString = formatReplaceString(_actual);
     if (hasArguments(node)) {
-      var argOffset = node.argumentList.offset + 1;
-      yieldPatch(replaceString, argOffset, argOffset);
-    } else {
       var target = node.argumentList.arguments.first;
       yieldPatch(replaceString, target.offset, target.end);
+    } else {
+      var argOffset = node.argumentList.offset + 1;
+      yieldPatch(replaceString, argOffset, argOffset);
     }
 
     super.visitMethodInvocation(node);
@@ -124,12 +124,6 @@ class Replacer extends RecursiveAstVisitor<void> with AstVisitingSuggestor {
   }
 
   bool hasArguments(MethodInvocation node) {
-    try {
-      // throw Exception If arugment is empty.
-      node.argumentList;
-      return true;
-    } on Exception {
-      return false;
-    }
+    return node.argumentList.arguments.isNotEmpty;
   }
 }
