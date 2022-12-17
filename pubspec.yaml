@@ -1,5 +1,9 @@
 name: inline_snapshot
-description: Inline snapshot testing for Dart.
+description: |
+  Inline snapshot testing for Dart.
+  Allows updating expected results based on actual results.
+  Expected results are not written to an external file,
+  but rather stored in the same location as the input.
 version: 1.0.0
 repository: https://github.com/ktanaka101/dart-inline-snapshot
 
